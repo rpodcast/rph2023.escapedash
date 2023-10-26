@@ -1,0 +1,99 @@
+---
+title: "usertable"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{usertable}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+```{r setup}
+library(DBI)
+library(RPostgres)
+library(dplyr)
+
+devtools::load_all()
+
+# production mode (use hosted PostgreSQL on Digital Ocean)
+Sys.setenv(R_CONFIG_ACTIVE = "production")
+
+db_type <- get_golem_config("db_type")
+
+# docker container postgres db
+con <- DBI::dbConnect(
+  RPostgres::Postgres(),
+  host = Sys.getenv(glue::glue("PG_{db_type}_HOST")),
+  dbname = Sys.getenv(glue::glue("PG_{db_type}_DB")),
+  port = Sys.getenv(glue::glue("PG_{db_type}_PORT")),
+  user = Sys.getenv(glue::glue("PG_{db_type}_USER")),
+  password = Sys.getenv(glue::glue("PG_{db_type}_PASS"))
+)
+
+user_df_db <- DBI::dbReadTable(con, "userdata")
+```
+
+
+## Any contestants who didn't finish a single question
+
+```{r quiz_completion}
+user_df_db |>
+  group_by(user_nickname) |>
+  mutate(n_rows = n()) |>
+  ungroup() |>
+  filter(n_rows < 2)
+```
+
+Good news, everyone finished at least one question
+
+## Overall results
+
+```{r overall}
+user_df_db |>
+  filter(event_type == "submit_answer") |>
+  group_by(user_nickname) |>
+  slice_max(overall_time, with_ties = FALSE) |>
+  ungroup() |>
+  select(user_nickname, user_name, user_picture, session_timestamp, overall_time, proportion_complete, quiz_complete) |>
+  View()
+```
+
+## Total Hints used for each user
+
+```{r}
+user_df_db |>
+  filter(event_type == "request_hint") |>
+  group_by(user_nickname, question_id) |>
+  slice_max(hint_counter, with_ties = FALSE) |>
+  ungroup() |>
+  group_by(user_nickname) |>
+  tally(wt = hint_counter, name = "hint_total") |>
+  arrange(hint_total)
+```
+
+
+## Stats around question time 
+
+```{r}
+user_df_db |>
+  filter(event_type == "submit_answer") |>
+  group_by(question_id) |>
+  summarize(
+    avg_attempts = mean(attempt_counter, na.rm = TRUE)
+  )
+
+user_df_db |>
+  filter(event_type == "submit_answer") |>
+  filter(correct_answer_ind) |>
+  group_by(question_id) |>
+  summarize(
+    n_correct = n(),
+    avg_time = mean(question_time, na.rm = TRUE),
+  )
+```

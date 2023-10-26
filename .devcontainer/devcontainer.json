@@ -2,7 +2,7 @@
 // README at: https://github.com/rocker-org/devcontainer-templates/tree/main/src/r-ver
 // Change the 'name' field to suit your project
 {
-	"name": "R-Dev-Projects (rocker/r-ver base)",
+	"name": "RPharma 2023 break app dashboard (rocker/r-ver base)",
 	"dockerComposeFile": "docker-compose.yml",
 	"service": "vscode",
 	"workspaceFolder": "/workspaces/${localWorkspaceFolderBasename}",

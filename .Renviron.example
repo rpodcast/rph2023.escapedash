@@ -1,0 +1,19 @@
+# Auth0 service variables
+AUTH0_USER="auth-tenant-id" # Note that this is tenant, not your login ID
+AUTH0_KEY="myauthkey"
+AUTH0_SECRET="myauthsecret"
+
+# local docker container postgres database
+# since this is a local container, you can keep these same values in your .Renviron file
+PG_LOCAL_HOST="quizpostgresdb"
+PG_LOCAL_DB="postgres"
+PG_LOCAL_USER="postgres"
+PG_LOCAL_PASS="shiny"
+PG_LOCAL_PORT=5432
+
+# linode hosted postgres database
+PG_SERVER_HOST="db-host.change.me"
+PG_SERVER_DB="dbchangeme"
+PG_SERVER_USER="dbuserchangeme"
+PG_SERVER_PASS="dbpasswordchangeme"
+PG_SERVER_PORT=9999 # change to relevant value

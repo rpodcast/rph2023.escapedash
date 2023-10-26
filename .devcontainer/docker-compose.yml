@@ -15,6 +15,13 @@ services:
     command: sleep infinity
     env_file: .env
 
+  quizpostgresdb:
+    image: postgres:13
+    restart: unless-stopped
+    volumes:
+      - postdb-data:/data/db
+    env_file: .env
+
   rstudiodevcontainer:
     build:
       context: .
@@ -27,5 +34,9 @@ services:
       unless-stopped
     # change local port number if needed. Keep container port (8787) the same.
     ports:
-      - 9998:8787
+      - 3335:8787
     env_file: .env
+
+volumes:
+  postdb-data:
+

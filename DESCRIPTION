@@ -1,0 +1,19 @@
+Package: rph2023.escapedash
+Title: The RPharma 2023 Escape Room Dashboard
+Version: 0.0.0.9000
+Authors@R: person('Eric', 'Nantz', email = 'theRcast@gmail.com', role = c('cre', 'aut'))
+Description: A custom Shiny application dashboard reporting results from the R/Pharma 2023 Escape Room application database.
+License: MIT + file LICENSE
+Imports: 
+    config (>= 0.3.2),
+    golem (>= 0.4.1),
+    shiny (>= 1.7.5.1)
+Encoding: UTF-8
+LazyData: true
+RoxygenNote: 7.2.3
+URL: https://github.com/rpodcast/rph2023.escapedash
+BugReports: https://github.com/rpodcast/rph2023.escapedash/issues
+Suggests: 
+    knitr,
+    rmarkdown
+VignetteBuilder: knitr
